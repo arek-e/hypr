@@ -1,0 +1,17 @@
+#!/usr/bin/bash
+
+
+if grep -q open /proc/acpi/button/lid/LID0/state; then
+  hyprctl dispatch dpms "on eDP-1"
+  hyprctl keyword monitor eDP-1, 1920x1080, 0x0, 1.25
+  hyprctl keyword monitor HDMI-A-1, highres, 0x1080, 1
+else
+	# If we are not in CLAMSHELL mode
+	if [[ "$(hyprctl monitors | grep -c Monitor)" == "1" ]]; then
+		~/.config/hypr/scripts/default/lock
+	else
+    hyprctl dispatch dpms "off eDP-1"
+    hyprctl keyword monitor eDP-1,disable
+    hyprctl keyword monitor HDMI-A-1, highres, 0x0, 1
+	fi
+fi
